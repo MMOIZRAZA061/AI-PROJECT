@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title">
+            <i class="fas fa-brain"></i>
+            Smart Course Recommendations
+        </h1>
+        <p class="hero-subtitle">Discover the perfect course based on your interests, skills, and preferences</p>
+    </div>
+</div>
+
+<div class="form-section">
+    <div class="form-container">
+        {% if error %}
+        <div class="error-message" style="background: rgba(220, 38, 38, 0.1); color: #fca5a5; padding: 1rem; margin-bottom: 1.5rem; border-radius: 10px; border: 1px solid rgba(220, 38, 38, 0.3); display: flex; gap: 0.75rem; align-items: center;">
+            <i class="fas fa-exclamation-circle"></i>
+            <span>{{ error }}</span>
+        </div>
+        {% endif %}
+
+        {% if show_about %}
+        <div class="about-section" style="margin-bottom: 2rem; padding: 2rem; background: rgba(99, 102, 241, 0.05); border-radius: 15px; border: 1px solid rgba(99, 102, 241, 0.2);">
+            <h2 style="color: #e5e7eb; margin-bottom: 1rem; font-size: 1.8rem;">About This System</h2>
+            <p style="color: #d1d5db; line-height: 1.8; margin-bottom: 1.5rem;">This intelligent course recommendation system uses machine learning to suggest the most suitable courses based on your preferences. Our model was trained on a diverse dataset of 5000+ course preferences to deliver accurate recommendations.</p>
+            
+            <div class="features">
+                <div class="feature">
+                    <i class="fas fa-robot"></i>
+                    <h3>AI-Powered</h3>
+                    <p>Uses Random Forest algorithm for accurate predictions</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-bolt"></i>
+                    <h3>Fast & Reliable</h3>
+                    <p>Get instant recommendations in seconds</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>High Accuracy</h3>
+                    <p>Trained model with excellent prediction accuracy</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <form id="recommendation-form" action="{{ url_for('predict') }}" method="POST" style="background: rgba(55, 65, 81, 0.3); padding: 2rem; border-radius: 15px; border: 1px solid rgba(99, 102, 241, 0.2);">
+            <div class="form-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                <div class="form-group">
+                    <label for="interests" style="color: #e5e7eb; font-weight: 600; margin-bottom: 0.7rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-heart" style="color: var(--accent);"></i>
+                        Your Interests
+                    </label>
+                    <select id="interests" name="interests" required>
+                        <option value="">Choose your interest area</option>
+                        {% for interest in interests %}
+                        <option value="{{ interest }}">{{ interest }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="category" style="color: #e5e7eb; font-weight: 600; margin-bottom: 0.7rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-tags" style="color: var(--accent);"></i>
+                        Category
+                    </label>
+                    <select id="category" name="category" required>
+                        <option value="">Select category</option>
+                        {% for category in categories %}
+                        <option value="{{ category }}">{{ category }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="preferred_difficulty" style="color: #e5e7eb; font-weight: 600; margin-bottom: 0.7rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-signal" style="color: var(--accent);"></i>
+                        Difficulty Level
+                    </label>
+                    <select id="preferred_difficulty" name="preferred_difficulty" required>
+                        <option value="">Select difficulty</option>
+                        {% for difficulty in difficulties %}
+                        <option value="{{ difficulty }}">{{ difficulty }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="past_experience" style="color: #e5e7eb; font-weight: 600; margin-bottom: 0.7rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-user-graduate" style="color: var(--accent);"></i>
+                        Your Experience
+                    </label>
+                    <select id="past_experience" name="past_experience" required>
+                        <option value="">Select experience level</option>
+                        {% for experience in experiences %}
+                        <option value="{{ experience }}">{{ experience }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="preferred_language" style="color: #e5e7eb; font-weight: 600; margin-bottom: 0.7rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-language" style="color: var(--accent);"></i>
+                        Preferred Language
+                    </label>
+                    <select id="preferred_language" name="preferred_language" required>
+                        <option value="">Select language</option>
+                        {% for language in languages %}
+                        <option value="{{ language }}">{{ language }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn" style="margin-top: 1.5rem;">
+                <i class="fas fa-magic"></i> Get Recommendation
+            </button>
+        </form>
+
+        <div class="stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1.5rem; margin-top: 2.5rem; padding: 2rem; background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1)); border-radius: 15px; border: 1px solid rgba(99, 102, 241, 0.2);">
+            <div class="stat" style="text-align: center;">
+                <h3 style="font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 0.5rem;">5000+</h3>
+                <p style="color: #d1d5db; font-weight: 600;">Training Samples</p>
+            </div>
+            <div class="stat" style="text-align: center;">
+                <h3 style="font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 0.5rem;">95%+</h3>
+                <p style="color: #d1d5db; font-weight: 600;">Accuracy Rate</p>
+            </div>
+            <div class="stat" style="text-align: center;">
+                <h3 style="font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 0.5rem;">40+</h3>
+                <p style="color: #d1d5db; font-weight: 600;">Interest Areas</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

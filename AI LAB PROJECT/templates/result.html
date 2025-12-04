@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Recommendation Result - Course Recommendation System{% endblock %}
+
+{% block content %}
+<div class="result-section" style="padding: 2rem 0;">
+    <div class="result-container" style="max-width: 900px; margin: 0 auto;">
+        <div class="result-header" style="text-align: center; margin-bottom: 2.5rem;">
+            <h1 class="result-title" style="font-size: 2.8rem; color: #f3f4f6; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; gap: 1rem;">
+                <i class="fas fa-trophy" style="color: #fbbf24;"></i>
+                Your Perfect Course Match!
+            </h1>
+            <p class="result-subtitle" style="color: #d1d5db; font-size: 1.1rem;">Based on your preferences, here's our AI-powered recommendation</p>
+        </div>
+
+        <div class="recommendation-card" style="position: relative; overflow: hidden;">
+            <div class="course-badge" style="background: linear-gradient(135deg, var(--accent), #f87171); color: white; display: inline-block; padding: 0.5rem 1rem; border-radius: 50px; margin-bottom: 1.5rem; font-weight: 700; font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase;">
+                <i class="fas fa-gem"></i>
+                Recommended Course
+            </div>
+            <h2 class="course-title" style="font-size: 2.5rem; margin-bottom: 1.5rem;">{{ recommendation }}</h2>
+            
+            {% if confidence != "N/A" %}
+            <div class="confidence-meter" style="margin-top: 2rem;">
+                <div class="confidence-label" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                    <span style="color: #d1d5db; font-weight: 600;">Confidence Score:</span>
+                    <strong class="confidence-value" style="font-size: 1.3rem; color: #4ade80;">{{ confidence }}%</strong>
+                </div>
+                <div class="confidence-bar" style="background: rgba(99, 102, 241, 0.2); border-radius: 10px; height: 10px; overflow: hidden; border: 1px solid rgba(99, 102, 241, 0.3);">
+                    <div class="confidence-fill" style="width: {{ confidence }}%; background: linear-gradient(90deg, var(--primary), var(--secondary)); height: 100%; border-radius: 10px; transition: width 0.6s ease;"></div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="user-preferences">
+            <h3 style="color: #e5e7eb; margin-bottom: 1.5rem; font-size: 1.3rem; display: flex; align-items: center; gap: 0.75rem;">
+                <i class="fas fa-user-cog" style="color: var(--primary);"></i>
+                Your Preferences
+            </h3>
+            <div class="preferences-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                <div class="preference-item" style="background: rgba(99, 102, 241, 0.05); padding: 1rem; border-radius: 10px; border: 1px solid rgba(99, 102, 241, 0.1);">
+                    <span class="preference-label" style="display: block; color: #9ca3af; font-size: 0.9rem; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;">Interests</span>
+                    <span class="preference-value" style="display: block; color: #e5e7eb; font-weight: 600; font-size: 1.05rem;">{{ user_input.interests }}</span>
+                </div>
+                <div class="preference-item" style="background: rgba(99, 102, 241, 0.05); padding: 1rem; border-radius: 10px; border: 1px solid rgba(99, 102, 241, 0.1);">
+                    <span class="preference-label" style="display: block; color: #9ca3af; font-size: 0.9rem; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;">Category</span>
+                    <span class="preference-value" style="display: block; color: #e5e7eb; font-weight: 600; font-size: 1.05rem;">{{ user_input.category }}</span>
+                </div>
+                <div class="preference-item" style="background: rgba(99, 102, 241, 0.05); padding: 1rem; border-radius: 10px; border: 1px solid rgba(99, 102, 241, 0.1);">
+                    <span class="preference-label" style="display: block; color: #9ca3af; font-size: 0.9rem; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;">Difficulty</span>
+                    <span class="preference-value" style="display: block; color: #e5e7eb; font-weight: 600; font-size: 1.05rem;">{{ user_input.preferred_difficulty }}</span>
+                </div>
+                <div class="preference-item" style="background: rgba(99, 102, 241, 0.05); padding: 1rem; border-radius: 10px; border: 1px solid rgba(99, 102, 241, 0.1);">
+                    <span class="preference-label" style="display: block; color: #9ca3af; font-size: 0.9rem; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;">Experience</span>
+                    <span class="preference-value" style="display: block; color: #e5e7eb; font-weight: 600; font-size: 1.05rem;">{{ user_input.past_experience }}</span>
+                </div>
+                <div class="preference-item" style="background: rgba(99, 102, 241, 0.05); padding: 1rem; border-radius: 10px; border: 1px solid rgba(99, 102, 241, 0.1);">
+                    <span class="preference-label" style="display: block; color: #9ca3af; font-size: 0.9rem; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;">Language</span>
+                    <span class="preference-value" style="display: block; color: #e5e7eb; font-weight: 600; font-size: 1.05rem;">{{ user_input.preferred_language }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons" style="display: flex; gap: 1rem; justify-content: center; margin: 2.5rem 0; flex-wrap: wrap;">
+            <a href="{{ url_for('home') }}" class="btn" style="flex: 1; min-width: 200px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                <i class="fas fa-redo"></i>
+                Get Another Recommendation
+            </a>
+            <button onclick="shareResult()" class="btn" style="flex: 1; min-width: 200px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                <i class="fas fa-share"></i>
+                Share Result
+            </button>
+        </div>
+
+        <div class="suggestion-note" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(99, 102, 241, 0.1)); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 12px; padding: 1.5rem; display: flex; gap: 1rem; align-items: flex-start;">
+            <i class="fas fa-lightbulb" style="font-size: 1.5rem; color: #fbbf24; flex-shrink: 0; margin-top: 0.25rem;"></i>
+            <p style="color: #d1d5db; line-height: 1.7; margin: 0;"><strong style="color: #e5e7eb;">Pro Tip:</strong> This recommendation is based on our AI model trained on thousands of course preferences. Consider this as a starting point for your learning journey!</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
